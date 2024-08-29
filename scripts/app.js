@@ -35,7 +35,6 @@ openInterface.addEventListener("click", runStore);
 
 function runStore() {
   let tienda = loadStore();
-
   alert("¡Bienvenido a mi Regaleria!\nPara interacturar utilizará los números de su teclado.\nA continuación se le mostrarán opciones.");
   mainLoop(tienda);
 }
@@ -72,10 +71,8 @@ function mainLoop(tienda){
 }
 
 function menu() {
-  let opcion = parseInt(prompt("=== Menu Principal ===\n1: Explorar Productos.\n2: Ver Carrito.\n3: Terminar Sesión."));
-  while (isNaN(opcion) || opcion < 1 || opcion > 3)
-      opcion = parseInt(prompt("Ups... botón equivocado. Intentalo otra vez.\n=== Menu Principal ===\n1: Explorar Productos.\n2: Ver Carrito.\n3: Terminar Sesión."));
-  return opcion;
+  const message = "=== Menu Principal ===\n1: Explorar Productos.\n2: Ver Carrito.\n3: Terminar Sesión.";
+  return inputInt(message, 1, 3);
 }
 
 function cartMenu(tienda) {
@@ -99,7 +96,7 @@ function cartMenu(tienda) {
       return tienda;
     }
     case 1: {
-      return deleteProductFromCart(opcion - 1, tienda);
+      return deleteProductFromCart(tienda);
     }
     case 2: {
       return finishPurchase(tienda);
@@ -107,11 +104,8 @@ function cartMenu(tienda) {
   }
 }
 
-function deleteProductFromCart(indice /*indice a eliminar del carrito*/, tienda){
+function deleteProductFromCart(tienda){
   // debugger;
-  if (indice < 0 || indice >= tienda.carrito.length)
-    return tienda;
-
   let message = "=== ¿Cual desea eliminar? ===\n0: 🔙 Volver\n"
   tienda.carrito.forEach((producto, indice) =>
     message += ++indice + ": " + producto.nombre + " | $" + producto.precio + "\n"
@@ -167,7 +161,7 @@ function exploreMainCategories(tienda){
   return exploreCategory(categorias[categorySelected], tienda);
 }
 
-function exploreCategory(categoria /* recibe Categoria */, tienda){
+function exploreCategory(categoria, tienda){
   // debugger
   let totalProducts = categoria.productos != undefined ? categoria.productos.length : 0;
   const totalSubcategories = categoria.subCategorias != undefined ? categoria.subCategorias.length : 0;

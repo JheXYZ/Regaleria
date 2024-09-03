@@ -15,7 +15,7 @@ class Producto {
 }
 
 class Categoria {
-  constructor(nombre = "", productos /*array de Producto*/, subCategorias /*array de Categoria*/) {
+  constructor(nombre = "", productos = [], subCategorias = []) {
     this.nombre = nombre;
     this.productos = productos;
     this.subCategorias = subCategorias;
@@ -23,7 +23,7 @@ class Categoria {
 }
 
 class Store {
-  constructor(categorias /*array de Categoria*/, carrito /*array de Producto*/) {   
+  constructor(categorias = [], carrito = []) {   
     this.categorias = categorias;
     this.carrito = carrito;
   }
@@ -106,21 +106,18 @@ function cartMenu(tienda) {
 
 function deleteProductFromCart(tienda){
   // debugger;
-  let message = "=== ¿Cual desea eliminar? ===\n0: 🔙 Volver\n"
-  tienda.carrito.forEach((producto, indice) =>
-    message += ++indice + ": " + producto.nombre + " | $" + producto.precio + "\n"
-  );
+  let message = "=== ¿Cual desea eliminar? ===\n0: 🔙 Volver\n" + tienda.carrito.map(
+    (producto, index) => `${++index}: ${producto.nombre} | $${producto.precio}`
+  ).join("\n");
 
   let eliminate = inputInt(message, 0, tienda.carrito.length);
   if (eliminate === 0)
     return tienda;
 
   eliminate--;
-  let nombre = tienda.carrito[eliminate].nombre;
-
+  alert(`Se elimino ${tienda.carrito[eliminate].nombre} del carrito`);
   tienda.carrito.splice(eliminate, 1);
-  alert(`Se elimino ${nombre} del carrito`);
-
+  
   return tienda;
 }
 
@@ -148,10 +145,9 @@ function exploreMainCategories(tienda){
     return tienda;
   }
 
-  let message = "=== Categorías de Productos ===\n0: 🔙 Volver\n";
-  getCategoriesNames(categorias).forEach((nombresCategorias, index) =>
-    message += ++index + ": " + nombresCategorias + "\n"
-  );
+  let message = "=== Categorías de Productos ===\n0: 🔙 Volver\n" + getCategoriesNames(categorias).map((nombresCategorias, index) =>
+    `${index + 1}: ${nombresCategorias}`
+  ).join("\n");
 
   let categorySelected = inputInt(message, 0 , categorias.length);
   if (categorySelected === 0)
@@ -162,52 +158,48 @@ function exploreMainCategories(tienda){
 }
 
 function exploreCategory(categoria, tienda){
-  // debugger
-  let totalProducts = categoria.productos != undefined ? categoria.productos.length : 0;
-  const totalSubcategories = categoria.subCategorias != undefined ? categoria.subCategorias.length : 0;
+  debugger
+  const totalProducts = categoria.productos.length;
+  const totalSubcategories = categoria.subCategorias.length;
   if (totalProducts == 0 && totalSubcategories == 0 ){
     alert("¡Vaya! No hay nada que mostrar 😅");
-    return tienda;
+    return;
   }
 
-  let messageProducts = messageSubcategories = "";
+  let messageProducts = messageSubcategories = ""
   if (totalProducts > 0)
-    [messageProducts, totalProducts] = selectProduct(categoria);
+    messageProducts = selectProduct(categoria);
 
   if (totalSubcategories > 0) {
     messageSubcategories = "=== Subcategorias de " + categoria.nombre + " ===\n";
     if (totalProducts === 0)
       messageSubcategories += "0: 🔙 Volver\n"
 
-    getCategoriesNames(categoria.subCategorias).forEach((categoryName, index) => 
-      messageSubcategories += (index + totalProducts + 1) + ": " + categoryName + "\n"
-    );
+    messageSubcategories += categoria.subCategorias.map((subCategoria, index) =>
+      `${index + totalProducts + 1}: ${subCategoria.nombre}`
+    ).join("\n");
   }
 
   let message = messageProducts + messageSubcategories;
   let option = inputInt(message, 0, totalProducts + totalSubcategories)
 
-  if (option === 0)
-    return tienda;
-  if (option <= totalProducts) {
-    return productMenu(categoria.productos[option - 1], tienda); // -1 es para corregir para obtener el indice del producto
-  } else { 
-    return exploreCategory(categoria.subCategorias[option - 1], tienda);
-  }
+  if (option === 0) return tienda;
+  if (option <= totalProducts) return productMenu(categoria.productos[option - 1], tienda); // -1 es para corregir para obtener el indice del producto
+  else return exploreCategory(categoria.subCategorias[option - 1], tienda);
 }
 
 function selectProduct(categoria /* recibe Categoria */) {
   // debugger
   if (categoria.productos.length === 0)
-    return ["", 0];
+    return ""
   
   let message = `=== Productos de: ${categoria.nombre} ===\n¿Que producto desea ver?\n0: 🔙 Volver\n`; 
 
-  categoria.productos.forEach((producto, index) =>
-    message += ++index + ": " + producto.nombre + " | $" + producto.precio + " | Stock: " + producto.stock + "\n"
-  );
+  message += categoria.productos.map((producto, index) =>
+    `${index + 1}: ${producto.nombre} | $${producto.precio} | Stock: ${producto.stock}`
+  ).join("\n");
 
-  return [message, categoria.productos.length];
+  return message;
   // let selectedProduct = inputInt(message, 0 , categoria.productos.length);
 }
 
@@ -231,17 +223,9 @@ function inputInt(message, min, max){
   return input;
 }
 
-
-function getCategoriesNames(categorias /* array de Categoria */){
-  // debugger
-  let products = [];
-  if (categorias.length <= 0)
-    return products;
-
-  for (const categoria of categorias)
-    products.push(categoria.nombre);
-
-  return products;
+function getCategoriesNames(categorias){
+  debugger
+  return categorias.length === 0 ? [] : categorias.map(categoria => categoria.nombre);
 }
 
 // generar los productos y categorias

@@ -1,14 +1,40 @@
+@use 'sass:list';
 @import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Slab:wght@100..900&display=swap');
 
 //paleta de colores
 $chrysler-blue: #5603ad;
+$palatinate-blue: #5438DC;
+$azure: #357DED;
 $amethyst: #8367c7;
 $lavander: #B572FD;
 $celadon: #b3e9c7;
 $tea-green: #c2f8cb;
 $honeydew: #f0fff1;
 
-$gradient-10-80-10: linear-gradient(to right, $amethyst 0%, $chrysler-blue 20%, $chrysler-blue 80%, $amethyst 100%);
+@function custom-gradient($type, $color1, $color2, $color3, $args...) {
+    $len: length($args);
+    @if $type == "linear" {
+        @if $len == 0 or $len > 5 {
+            @return linear-gradient($color1 0%, $color2 20%, $color2 80%, $color3 100%);
+        }
+        @if $len == 1 {
+            @return linear-gradient(list.nth($args, 1), $color1 0%, $color2 20%, $color2 80%, $color3 100%);
+        }
+        @return linear-gradient(list.nth($args, 1), $color1 list.nth($args, 2), $color2 list.nth($args, 3), $color2 list.nth($args, 4), $color3 list.nth($args, 5));
+    }
+    @if $type == "radial" {
+        @if $len == 0 or $len > 5 {
+            @return radial-gradient($color1 0%, $color2 20%, $color2 80%, $color3 100%);
+        }
+        @if $len == 1 {
+            @return radial-gradient(list.nth($args, 1), $color1 0%, $color2 20%, $color2 80%, $color3 100%);
+        }
+        @return radial-gradient(list.nth($args, 1), $color1 list.nth($args, 2), $color2 list.nth($args, 3), $color2 list.nth($args, 4), $color3 list.nth($args, 5));
+    }
+    
+    @return linear-gradient($color1 0%, $color2 20%, $color2 80%, $color3 100%);
+}
+$c-linear-gradient: custom-gradient("linear", $amethyst, $chrysler-blue, $amethyst, to right);
 
 
 * {
@@ -22,6 +48,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 10px;
     min-height: 100vh;
     background-color: $celadon;
 }

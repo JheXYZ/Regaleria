@@ -197,7 +197,7 @@ class GestorRelaciones {
   }
 
   obtenerRelacionesPorCategoria() {
-
+    //todo
   }
 
 }
@@ -288,7 +288,6 @@ class Tienda {  // se puede crear una tienda sin llenar el constructor O con (ca
 
     this.gestorProductos
     return true;
-
   }
 
   nuevaCategoria(categoria) {
@@ -344,7 +343,6 @@ class Tienda {  // se puede crear una tienda sin llenar el constructor O con (ca
     return true;
   }
 
-
 }
 
 const categoria1 = new Categoria("Ropa");
@@ -361,28 +359,6 @@ const producto4 = new Producto("Chaqueta", "Chaqueta impermeable con capucha", 8
 const producto5 = new Producto("Gorra", "Gorra ajustable con protección UV", 12.75, 100, 0);
 
 let tienda = new Tienda([categoria1, categoria2, categoria3, categoria4, categoria5], [producto1, producto2, producto3, producto4, producto5]);
-
-tienda.nuevaCategoriaAProducto(producto1, categoria1)
-tienda.nuevaCategoriaAProducto(producto1, categoria2)
-tienda.nuevaCategoriaAProducto(producto3, categoria1)
-tienda.nuevaCategoriaAProducto(producto1, categoria3)
-
-
-console.log(tienda.obtenerCarrito())
-tienda.ingresarProductoAlCarrito(tienda.gestorProductos.obtenerPorID(1), 2)
-tienda.ingresarProductoAlCarrito(tienda.gestorProductos.obtenerPorID(2), 20)
-console.log(tienda.obtenerCarrito())
-
-
-console.log(tienda.obtenerPrecioFinal())
-tienda.finalizarCompra()
-console.log(tienda.obtenerTodasLasRelaciones())
-
-// console.log(tienda.obtenerTodasLasCategorias())
-
-// console.log(producto1)
-// console.log(producto1.operarStock(-50))
-// console.log(producto1)
 
 
 

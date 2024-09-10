@@ -151,6 +151,7 @@ main {
 .product {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   background-color: #5438DC;
   text-align: left;
   font-weight: normal;

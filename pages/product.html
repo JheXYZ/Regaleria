@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="../styles/styles.css">
     <title>Regalería | Nicolas Rodriguez Briz</title>
 </head>
 <body> 
     <header>
         <div class="header-container">
             <div class="header-logo">
-                <img src="./assets/regaleria logo 2.webp" alt="logo regaleria">
+                <a href="../index.html">
+                    <img src="..//assets/regaleria logo 2.webp" alt="logo regaleria">
+                </a>
             </div>
-            <a href="#">Regaleria</a>
+            <a href="../index.html">Regaleria</a>
             <div class="header-user-cart">
                 <div>
                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
@@ -61,30 +63,14 @@
         <nav/>
     </header>
     <main>
-        <h1>Bienvenido a mi Regaleria</h1>
-        <h2>⚒️ Todavía seguimos trabajando en el sitio web! ⚒️</h2>
-        <!-- <button class="button-1" id="temp-ui">Por ahora puede usar esta interfaz</button>
-        <h3>Disculpe el inconveniente 😅</h3> -->
-        <section class="products-container" id="products-container-main">
-            <!-- <article class="product">
-                <picture class="product-image-container">
-                    <a href="#"><img src="assets/regaleria logo.webp" alt="imagen del producto"></a>
-                </picture>
-                <div class="product-title-container">
-                    <a href="#">Titulo del productod dgfd gd dfgdf df g dfgfdgd dfgfdgd sdfsdf s Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum, animi.</a>
-                </div>
-                <div class="product-price-container">
-                    <h3>$1000</h3>
-                </div> 
-                <div class="product-addtocart-container">
-                    <button alt="añadir al carrito"><svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-bag-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12.5 21h-3.926a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304h11.339a2 2 0 0 1 1.977 2.304l-.263 1.708" /><path d="M16 19h6" /><path d="M19 16v6" /><path d="M9 11v-5a3 3 0 0 1 6 0v5" /></svg></button>
-                </div>
-            </article> -->
+         <section id="no-encontrado">   <!-- En caso de que se cargue un producto, esto no se muestra -->
+            <h1>¡Vaya parece que aquí no hay nada! 🤨</h1>
         </section>
+        <!-- Aquí se cargará un producto mediante JS -->
     </main>
     <footer>
         <p>Aquí irá un footer con las redes sociales y otros</p>
     </footer>
-    <script src="scripts/test.js" type="module"></script>
+    <script src="../scripts/test.js" type="module"></script>
 </body>
 </html>

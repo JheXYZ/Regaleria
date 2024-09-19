@@ -206,18 +206,118 @@ main {
   color: white;
   border: none;
 }
-.product-addtocart-container button svg {
+.product-addtocart-container button * {
   transition: all;
   transition-duration: 100ms;
 }
 .product-addtocart-container button:hover {
   cursor: pointer;
 }
-.product-addtocart-container button:hover svg {
+.product-addtocart-container button:hover * {
   transform: scale(1.1);
 }
-.product-addtocart-container button:active svg {
+.product-addtocart-container button:active * {
   transform: scale(1);
+}
+
+#no-encontrado {
+  display: block;
+}
+
+.product-full-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding-inline: 10px;
+}
+@media (width <= 768px) {
+  .product-full-container {
+    grid-template-columns: 1fr;
+  }
+  .product-full-container .product-full-image-container {
+    width: 100%;
+    justify-self: center;
+  }
+}
+
+.product-full-image-container {
+  max-width: 500px;
+  width: max-content;
+  justify-self: right;
+}
+.product-full-image-container img {
+  width: 100%;
+}
+
+.product-description {
+  order: 2;
+  max-width: 500px;
+  text-align: left;
+}
+@media screen and (width <= 768px) {
+  .product-description {
+    order: 1;
+  }
+}
+
+.product-aside h1 {
+  text-align: left;
+  font-size: xx-large;
+}
+
+.product-full-precio-container {
+  text-align: left;
+}
+.product-full-precio-container h3 {
+  text-decoration: line-through;
+  color: rgba(0, 0, 0, 0.55);
+  font-weight: 400;
+  font-size: medium;
+}
+.product-full-precio-container h2 {
+  font-size: xx-large;
+  font-weight: 500;
+}
+
+.product-buy-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 500px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.product-full-stock-container {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.manage-quantity {
+  display: flex;
+  align-items: center;
+}
+.manage-quantity button, .manage-quantity input {
+  width: 30px;
+  height: 30px;
+  border: none;
+}
+.manage-quantity button {
+  font-size: large;
+}
+.manage-quantity button:hover {
+  cursor: pointer;
+}
+.manage-quantity input {
+  outline: none;
+  min-width: max-content;
+  text-align: center;
+}
+.manage-quantity input::-webkit-inner-spin-button, .manage-quantity input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.full-view {
+  width: 120px;
 }
 
 footer {

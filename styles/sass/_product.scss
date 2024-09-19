@@ -75,20 +75,124 @@
     background: radial-gradient(circle, $lavander, $amethyst);
     color: white;
     border: none;
-    svg {
+    * {
       transition: all;
       transition-duration: 100ms;
     }
     &:hover {
         cursor: pointer;
-      svg {
+      * {
         transform: scale(1.1);
       }
     }
     &:active {
-      svg {
+      * {
         transform: scale(1);
       }
     }
   }
 }
+
+#no-encontrado {
+  display: block;
+}
+
+.product-full-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding-inline: 10px;
+
+  @media(width <= 768px){
+    grid-template-columns: 1fr;
+    .product-full-image-container {
+      width: 100%;
+      justify-self: center;
+    }
+  }
+}
+
+.product-full-image-container {
+  max-width: 500px;
+  width: max-content;
+  justify-self: right;
+  img {
+    width:  100%;
+  }
+}
+
+.product-description {
+  order: 2;
+  max-width: 500px;
+  @media screen and (width <= 768px){
+    order: 1;
+  }
+  text-align: left;
+}
+
+.product-aside {
+  h1 {
+    text-align: left;
+    font-size: xx-large;
+  }
+}
+
+.product-full-precio-container {
+  text-align: left;
+  h3 {
+    text-decoration: line-through;
+    color: rgba(0, 0, 0, .55);
+    font-weight: 400;
+    font-size:medium;
+  }
+  h2 {
+    font-size: xx-large;
+    font-weight: 500;
+  }
+}
+
+.product-buy-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 500px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.product-full-stock-container {
+  color: rgba(0, 0, 0, .55);
+}
+
+.manage-quantity {
+  // border: 1px red solid;
+  display: flex;
+  align-items: center;
+  button , input{
+    width: 30px;
+    height: 30px;
+    border: none;
+  }
+
+  button {
+    font-size: large;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  input {
+    outline: none;
+    min-width: max-content;
+    text-align: center;
+    &::-webkit-inner-spin-button, &::-webkit-outer-spin-button { 
+      -webkit-appearance: none;
+    }
+  }
+}
+
+
+.full-view {
+  width: 120px;
+
+}
+

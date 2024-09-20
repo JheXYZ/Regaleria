@@ -266,7 +266,6 @@ class Carrito {
   }
 
   aniadirProducto(id = 0, cantidad = 1, gestorProductos = new GestorProductos()) {
-    debugger
     const producto = gestorProductos.obtenerPorID(id);
     if (!producto) return false;
     const cantidadActual = this.itemsCarrito.get(id) || 0;
@@ -284,6 +283,13 @@ class Carrito {
     this.actualizarCarrito();
     actualizarIndicadorCarrito()
     return nuevaCantidad;
+  }
+
+  setearCantidad(id, cantidad, gestorProductos = new GestorProductos()) {
+    const producto = gestorProductos.obtenerPorID(id);
+    if (!producto || cantidad <= 0) return false;
+    this.itemsCarrito.set(id, Math.min(cantidad >= 0 ? cantidad : 1, producto.stock))
+    this.actualizarCarrito();
   }
 
   removerProducto(id, cantidad = 1) {
@@ -677,33 +683,42 @@ function productoCarrito(id, cantidad) {
     const input = event.target;
     if (parseInt(input.value) > parseInt(input.max)) input.value = input.max;
     else if (parseInt(input.value) < parseInt(input.min)) input.value = input.min;
+    tienda.carrito.setearCantidad(id, parseInt(input.value), tienda.gestorProductos)
   })
 
   const menos = document.createElement("button")
-  menos.innerText = "-"
+  if (parseInt(totalItems.value) === 1) {
+    menos.innerText = "X"
+    menos.style.color = "red"
+  } else
+    menos.innerText = "-"
+  
   menos.addEventListener("click", () => {
     totalItems.stepDown()
-    debugger
     if (parseInt(totalItems.value) === 1) {
       menos.innerText = "X"
       menos.style.color = "red"
-      return
     } else if (parseInt(totalItems.value) === 0){
       prodCarrito.remove()
-    } else {
-      menos.style.color = "black"
-      menos.innerText = "-"
+      tienda.carrito.removerProducto(id)
+      actualizarIndicadorCarrito()
+      return
     }
     tienda.carrito.removerProducto(id)
+    
   })
 
   const mas = document.createElement("button")
   mas.innerText = "+"
   mas.addEventListener("click", () => {
+    if (parseInt(totalItems.value) === 1){
+      menos.innerText = "-"
+      menos.style.color = "black"
+    }
     totalItems.stepUp()
     tienda.carrito.aniadirProducto(id, 1, tienda.gestorProductos)
   })
-
+  
   cantidadCont.appendChild(menos)
   cantidadCont.appendChild(totalItems)
   cantidadCont.appendChild(mas)

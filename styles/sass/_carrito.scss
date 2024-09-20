@@ -29,7 +29,7 @@
   display: grid;
   grid-template-rows: 50px 1fr 50px;
   padding-inline: 10px;
-  transition: 500ms;
+  transition: 500ms cubic-bezier(.5,0,0,1);
   h3 {
     align-self: center;
     font-size: x-large;
@@ -42,11 +42,10 @@
 }
 
 header, main, footer {
-  transition: 500ms;
+  transition: 500ms cubic-bezier(.5,0,0,1);;
 }
-
 .open-cart header, .open-cart main, .open-cart footer {
-  transform: translateX(-250px);
+  transform: translateX(-260px);
 }
 
 .carrito-title {
@@ -86,7 +85,7 @@ header, main, footer {
 
 .item-carrito {
   display: grid;
-  grid-template-columns: repeat(5, 120px);
+  grid-template-columns: repeat(5, minmax(auto, 112px));
   align-items: center;
   gap: 5px;
 

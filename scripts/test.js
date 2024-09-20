@@ -266,16 +266,23 @@ class Carrito {
   }
 
   aniadirProducto(id = 0, cantidad = 1, gestorProductos = new GestorProductos()) {
+    debugger
     const producto = gestorProductos.obtenerPorID(id);
     if (!producto) return false;
     const cantidadActual = this.itemsCarrito.get(id) || 0;
     if (cantidad < 1) return cantidadActual;
     if (cantidad > producto.stock) return false;
 
+    if (cantidadActual === 0) {
+      const prodList = document.querySelector(".lista-carrito")
+      prodList.appendChild(productoCarrito(id, cantidad))
+    }
+      
     const nuevaCantidad = cantidadActual + cantidad;
     if (nuevaCantidad > gestorProductos.obtenerPorID(id).stock) return false;
     this.itemsCarrito.set(id, nuevaCantidad);
     this.actualizarCarrito();
+    actualizarIndicadorCarrito()
     return nuevaCantidad;
   }
 
@@ -306,6 +313,10 @@ class Carrito {
     return [...this.itemsCarrito].map((value) => this.#itemizar(value, gestorProductos));
   }
 
+  obtenerTotalItems() {
+    return this.itemsCarrito.size
+  }
+
   finalizarCompra(tienda = new Tienda()) {
     let tiendaModificada = tienda;
     let compraValida = [...this.itemsCarrito.entries()].every(([id, cantidad]) => {
@@ -318,6 +329,16 @@ class Carrito {
   actualizarCarrito() {
     localStorage.setItem("regaleria-carrito", JSON.stringify([...this.itemsCarrito.entries()]));
   }
+
+  cargarFullCarrito() {
+    if (this.obtenerTotalItems() === 0)
+      return;
+
+    const listaCarrito = document.querySelector(".lista-carrito")
+    this.itemsCarrito.entries().forEach(([id, cantidad]) => {
+      listaCarrito.appendChild(productoCarrito(id, cantidad))
+    })
+  } 
 }
 
 class Tienda {
@@ -399,12 +420,16 @@ class Tienda {
     return this.carrito.obtenerCarrito(this.gestorProductos);
   }
 
+  obtenerCantidadCarrito() {
+    return this.carrito.obtenerTotalItems();
+  }
+
   obtenerPrecioFinal() {
     return this.carrito.calcularPrecioFinal();
   }
 
   ingresarProductoAlCarrito(id, cantidad) {
-    return this.carrito.aniadirProducto(id, cantidad, this.gestorProductos);
+    return this.carrito.aniadirProducto(id, cantidad, this.gestorProductos)
   }
 
   finalizarCompra() {
@@ -461,7 +486,7 @@ function crearProductoHTML(producto, id) {
   titleContainer.classList.add("product-title-container");
 
   const titleLink = document.createElement("a");
-  titleLink.href = `./pages/producto.html?id=${id}`;
+  titleLink.href = `./pages/product.html?id=${id}`;
   titleLink.textContent = producto?.nombre || "null";
 
   // Añadir el <a> dentro del contenedor del título
@@ -483,14 +508,13 @@ function crearProductoHTML(producto, id) {
 
   const addToCartButton = document.createElement("button");
   addToCartButton.alt = "añadir al carrito";
-  addToCartButton.addEventListener("click", () => aniadirProdCarrito(id))
+  addToCartButton.addEventListener("click", () => aniadirProdCarrito(id, 1, `Se añadio ${producto?.nombre} al carrito`))
 
   // Svg del boton añadir
   addToCartButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-bag-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12.5 21h-3.926a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304h11.339a2 2 0 0 1 1.977 2.304l-.263 1.708"/><path d="M16 19h6"/><path d="M19 16v6"/><path d="M9 11v-5a3 3 0 0 1 6 0v5"/></svg>`;
 
   // Añadir el botón al contenedor
   addToCartContainer.appendChild(addToCartButton);
-
   // Finalmente, añadir todos los componentes al contenedor principal
   productDOM.appendChild(picture);
   productDOM.appendChild(titleContainer);
@@ -509,10 +533,11 @@ function cargarProductoFull(){
   if (idProducto && !tienda.gestorProductos.existeID(idProducto))
     return
 
+  const producto = tienda.gestorProductos.obtenerPorID(idProducto);
   const textoDefault = document.getElementById("no-encontrado")
   textoDefault.style.display = "none" // para no mostrar el texto por defecto
   const mainNode = document.querySelector("main")
-  mainNode.appendChild(crearProductoFull(tienda.gestorProductos.obtenerPorID(idProducto)))
+  mainNode.appendChild(crearProductoFull(producto))
 
   const amountToCart = document.getElementById("amount-to-cart");
   const plusToCart = document.getElementById("plus-to-cart");
@@ -531,13 +556,19 @@ function cargarProductoFull(){
     if (parseInt(input.value) > parseInt(input.max)) input.value = input.max;
     else if (parseInt(input.value) < parseInt(input.min)) input.value = input.min;
   });
+
+  const addToCart = document.getElementById("add-to-cart-button")
+  addToCart.addEventListener("click", () => {
+    const cantidad = parseInt(amountToCart.value)
+    const mensaje = `Se ${cantidad > 1 ? "añadieron" : "añadio"} ${cantidad} ${producto.nombre} al carrito`
+    aniadirProdCarrito(idProducto, cantidad, mensaje)
+  })
 }
 
 function obtenerProductoID() {
   const urlParams = new URLSearchParams(window.location.search);
   return parseInt(urlParams.get('id')); // Obtiene el valor del parámetro "id"
 }
-
 
 function crearProductoFull(producto) {
   const productFullContainer = document.createElement("section");
@@ -555,7 +586,7 @@ function crearProductoFull(producto) {
               <h1>${producto.nombre}</h1>
           </div>
           <div class="product-full-precio-container">
-              <h3>${Intl.NumberFormat("es-AR", {style: "currency", currency: "ARS", minimumFractionDigits: 2, maximumFractionDigits: 2}).format(producto?.precio || 0)}</h3>
+              ${producto.descuento ? `<h3>${Intl.NumberFormat("es-AR", {style: "currency", currency: "ARS", minimumFractionDigits: 2, maximumFractionDigits: 2}).format(producto?.precio || 0)}</h3> <span>% ${Math.round(producto.descuento)}</span>` : ""}
               <h2>${Intl.NumberFormat("es-AR", {style: "currency", currency: "ARS", minimumFractionDigits: 2, maximumFractionDigits: 2}).format(producto?.precioConDescuento() || 0)}</h2>
           </div>
           <div class="product-buy-container">
@@ -568,7 +599,7 @@ function crearProductoFull(producto) {
                   <button id="plus-to-cart">+</button>
               </div>
               <div class="product-addtocart-container full-view">
-                  <button alt="añadir al carrito"><span>Añadir al Carrito</span></button>
+                  <button alt="añadir al carrito" id="add-to-cart-button"><span>Añadir al Carrito</span></button>
               </div>
           </div>
       </aside>
@@ -576,23 +607,105 @@ function crearProductoFull(producto) {
   return productFullContainer;
 }
 
-function aniadirProdCarrito(id) {
-  if (tienda.ingresarProductoAlCarrito(id))
-    alert("Se añadio al carrito");
+function aniadirProdCarrito(id, cantidad = 1, mensaje = "Se añadio al carrito") {
+  if (tienda.ingresarProductoAlCarrito(id, cantidad))
+    alert(mensaje);
   else 
-    alert("No se pudo añadir el producto al carrito");
+    alert("No se pudo añadir el producto al carrito\nPuede que no haya suficiente stock de este producto");
 }
 
+function indicarItemsCarrito(cantidadItems){
+  const cantidadCarrito = document.getElementById("cart-amount-items")
+  if (cantidadItems) {
+    cantidadCarrito.innerText = cantidadItems > 99 ? "+99" : cantidadItems
+    cantidadCarrito.style.display = "flex"
+  } else
+    cantidadCarrito.style.display = "none"
+}
+
+function actualizarIndicadorCarrito(){
+  indicarItemsCarrito(tienda.obtenerCantidadCarrito())
+}
 
 //main
 let tienda = cargarTienda(cargarItems());
+actualizarIndicadorCarrito()
+tienda.carrito.cargarFullCarrito()
 const rutaActual = window.location.pathname;
-
+const validURL = rutaActual === '/' || rutaActual === '/index.html' || rutaActual === "/#" || rutaActual === "/JavaScript-Course/" || rutaActual === "/JavaScript-Course/#"
 // Verificar la ruta actual
-if (rutaActual === '/' || rutaActual === '/index.html' || rutaActual === "/#") {
+if (validURL) {
   crearTodosProductosEnDOM(tienda.obtenerTodosLosProductosConIDs())
-} else if (rutaActual === '/pages/product.html') {
+} else if (rutaActual === '/pages/product.html' || rutaActual === '/JavaScript-Course/pages/product.html') {
   cargarProductoFull()
 }
 
+const iconoCarrito = document.getElementById("cart-container");
+iconoCarrito.addEventListener("click", () => abrirCerrarCarrito())
+const botonCerrarCarro = document.getElementById("close-cart")
+botonCerrarCarro.addEventListener("click", () => abrirCerrarCarrito())
 
+function abrirCerrarCarrito() {
+  const body = document.body;
+  body.classList.toggle("open-cart")
+}
+
+function productoCarrito(id, cantidad) {
+  const producto = tienda.gestorProductos.obtenerPorID(id)
+  const prodCarrito = document.createElement("div")
+  prodCarrito.classList.add("item-carrito")
+  prodCarrito.innerHTML = `
+    <div class="imagen-prod" id="${id}">
+        <img src="${producto?.imagen || ""}">
+    </div>
+    <div class="nombre-prod">
+        ${producto.nombre}
+    </div>
+    <div class="cantidad-prod manage-quantity">
+    </div>
+    <div class="precio-prod">${producto.precioConDescuento()}</div>
+    <div class="subtotal-item">${producto.precioConDescuento() * cantidad}</div>`;
+  
+  const cantidadCont = prodCarrito.querySelector(".cantidad-prod")
+  const totalItems = document.createElement("input")
+  totalItems.type = "number"
+  totalItems.min = "0"
+  totalItems.max = producto.stock;
+  totalItems.value = cantidad;
+  totalItems.id = "amount-to-cart"
+  totalItems.addEventListener("focusout", (event) => {
+    const input = event.target;
+    if (parseInt(input.value) > parseInt(input.max)) input.value = input.max;
+    else if (parseInt(input.value) < parseInt(input.min)) input.value = input.min;
+  })
+
+  const menos = document.createElement("button")
+  menos.innerText = "-"
+  menos.addEventListener("click", () => {
+    totalItems.stepDown()
+    debugger
+    if (parseInt(totalItems.value) === 1) {
+      menos.innerText = "X"
+      menos.style.color = "red"
+      return
+    } else if (parseInt(totalItems.value) === 0){
+      prodCarrito.remove()
+    } else {
+      menos.style.color = "black"
+      menos.innerText = "-"
+    }
+    tienda.carrito.removerProducto(id)
+  })
+
+  const mas = document.createElement("button")
+  mas.innerText = "+"
+  mas.addEventListener("click", () => {
+    totalItems.stepUp()
+    tienda.carrito.aniadirProducto(id, 1, tienda.gestorProductos)
+  })
+
+  cantidadCont.appendChild(menos)
+  cantidadCont.appendChild(totalItems)
+  cantidadCont.appendChild(mas)
+  return prodCarrito;
+}

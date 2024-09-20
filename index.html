@@ -17,10 +17,10 @@
                 <div>
                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg>
                 </div>
-                <div>
+                <div id="cart-container">
                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-bag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" /><path d="M9 11v-5a3 3 0 0 1 6 0v5" /></svg>
+                    <span id="cart-amount-items">0</span>
                 </div>
-    
             </div>
         </div>
         <nav class="header-navbar">
@@ -60,6 +60,40 @@
             </ul>
         <nav/>
     </header>
+    <aside class="full-carrito">
+        <div class="carrito-title">
+            <button id="close-cart">X</button>
+            <h3>Tu carrito</h3>
+            <div></div>
+        </div>
+        <section class="lista-carrito">
+            <div class="template-carrito">
+                <div>Imagen</div>
+                <div>Producto</div>
+                <div>Cantidad</div>
+                <div>Precio</div>
+                <div>SubTotal</div>
+            </div>
+            <div class="item-carrito">
+                <div class="imagen-prod">
+                    <img src="" alt="">
+                </div>
+                <div class="nombre-prod">
+                    Nombre Producto
+                </div>
+                <div class="cantidad-prod manage-quantity">
+                    <button>-</button>
+                    <input type="number" min="1" max="" value="1" id="amount-to-cart">
+                    <button>+</button>
+                </div>
+                <div class="precio-prod">$ 1000</div>
+                <div class="subtotal-item">$ 3000</div>
+            </div>
+        </section>
+        <div>
+            <button id="finalizar-compra">Finalizar Compra</button>
+        </div>
+    </aside>
     <main>
         <h1>Bienvenido a mi Regaleria</h1>
         <h2>⚒️ Todavía seguimos trabajando en el sitio web! ⚒️</h2>
@@ -80,6 +114,7 @@
             </article> -->
         </section>
     </main>
+    
     <footer>
         <p>Aquí irá un footer con las redes sociales y otros</p>
     </footer>

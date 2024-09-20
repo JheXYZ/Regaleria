@@ -124,6 +124,7 @@
 .product-description {
   order: 2;
   max-width: 500px;
+  justify-self: right;
   @media screen and (width <= 768px){
     order: 1;
   }
@@ -140,6 +141,7 @@
 .product-full-precio-container {
   text-align: left;
   h3 {
+    display: inline;
     text-decoration: line-through;
     color: rgba(0, 0, 0, .55);
     font-weight: 400;
@@ -148,6 +150,15 @@
   h2 {
     font-size: xx-large;
     font-weight: 500;
+  }
+  span {
+    display: inline-block;
+    margin-left: 5px;
+    background-color: rgb(0, 216, 0);
+    outline: 2px rgb(0, 175, 0) solid;
+    border-radius: 5px;
+    padding-block: 4px;
+    padding-inline: 10px;
   }
 }
 
@@ -193,6 +204,5 @@
 
 .full-view {
   width: 120px;
-
 }
 

@@ -10,7 +10,7 @@ export const productosJSON = [
             "descripcion": "Set de bloques de construcción clásico para estimular la creatividad y la imaginación.",
             "precio": 12500.5,
             "stock": 50,
-            "descuento": 91.9
+            "descuento": 33
           },
           {
             "nombre": "Muñeca Barbie",

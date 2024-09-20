@@ -1,0 +1,118 @@
+#cart-container :hover {
+  cursor: pointer;
+}
+
+#cart-amount-items {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background-color: $lavander;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  right: -3px;
+}
+
+.full-carrito {
+  z-index: 2;
+  position: fixed;
+  top: 0;
+  right: -600px;
+  bottom: 0;
+  background: custom-gradient("linear", $amethyst, $lavander, $amethyst);
+  color: white;
+  text-decoration: none;
+  width: min(600px, 100%);
+  text-align: center;
+  display: grid;
+  grid-template-rows: 50px 1fr 50px;
+  padding-inline: 10px;
+  transition: 500ms;
+  h3 {
+    align-self: center;
+    font-size: x-large;
+    font-weight: 400;
+  }
+}
+
+.open-cart .full-carrito {
+  right: 0;
+}
+
+header, main, footer {
+  transition: 500ms;
+}
+
+.open-cart header, .open-cart main, .open-cart footer {
+  transform: translateX(-250px);
+}
+
+.carrito-title {
+  display: flex;
+  justify-content: space-between;
+
+  button, div {
+    width: 50px;
+    height: 50px;
+  }
+
+  button {
+    border: none;
+    border-radius: 5px;
+    background-color: $palatinate-blue;
+    color: white;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+}
+
+.lista-carrito {
+  display: grid;
+  grid-auto-rows: 50px;
+  overflow: scroll;
+}
+
+.template-carrito {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  background-color: $amethyst;
+}
+
+.item-carrito {
+  display: grid;
+  grid-template-columns: repeat(5, 120px);
+  align-items: center;
+  gap: 5px;
+
+  &:nth-child(odd){
+    background-color: $amethyst;
+  }
+  .cantidad-prod input {
+    min-width: auto;
+  }
+  .nombre-prod {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .manage-quantity {
+    justify-self: center;
+  }
+}
+
+#finalizar-compra {
+  width: 100%;
+  background-color: $palatinate-blue;
+  height: 100%;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transform: translateY(-10px);
+  font-size: 1.5rem;
+}

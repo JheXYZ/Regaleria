@@ -271,16 +271,15 @@ class Carrito {
     const cantidadActual = this.itemsCarrito.get(id) || 0;
     if (cantidad < 1) return cantidadActual;
     if (cantidad > producto.stock) return false;
-
-    if (cantidadActual === 0) {
-      const prodList = document.querySelector(".lista-carrito")
-      prodList.appendChild(productoCarrito(id, cantidad))
-    }
       
     const nuevaCantidad = cantidadActual + cantidad;
     if (nuevaCantidad > gestorProductos.obtenerPorID(id).stock) return false;
     this.itemsCarrito.set(id, nuevaCantidad);
     this.actualizarCarrito();
+    if (nuevaCantidad === 1) {
+      const prodList = document.querySelector(".lista-carrito")
+      prodList.appendChild(productoCarrito(id, cantidad))
+    }
     actualizarIndicadorCarrito()
     return nuevaCantidad;
   }
@@ -293,7 +292,6 @@ class Carrito {
   }
 
   removerProducto(id, cantidad = 1) {
-    if (!id) return false;
     const cantidadActual = this.itemsCarrito.get(id) || 0;
     if (cantidad < 1) return cantidadActual;
     const nuevaCantidad = Math.max(cantidadActual - cantidad, 0);
@@ -321,6 +319,10 @@ class Carrito {
 
   obtenerTotalItems() {
     return this.itemsCarrito.size
+  }
+
+  obtenerCantidadItem(id) {
+    return this.itemsCarrito.get(id)
   }
 
   finalizarCompra(tienda = new Tienda()) {
@@ -502,8 +504,15 @@ function crearProductoHTML(producto, id) {
   const priceContainer = document.createElement("div");
   priceContainer.classList.add("product-price-container");
 
-  const price = document.createElement("h3");
-  price.textContent = Intl.NumberFormat("es-AR", {style: "currency", currency: "ARS", minimumFractionDigits: 2, maximumFractionDigits: 2}).format(producto?.precio || 0);
+  if (producto?.descuento) {
+    const containerDescuento = document.createElement("div")
+    containerDescuento.classList.add("product-full-precio-container")
+    containerDescuento.innerHTML = `<h3>${formatearPrecio(producto?.precio)}</h3><span>% ${Math.round(producto.descuento)}</span>`
+    priceContainer.appendChild(containerDescuento)
+  }
+
+  const price = document.createElement("h2");
+  price.textContent = formatearPrecio(producto.precioConDescuento());
 
   // Añadir el precio al contenedor de precio
   priceContainer.appendChild(price);
@@ -527,6 +536,10 @@ function crearProductoHTML(producto, id) {
   productDOM.appendChild(priceContainer);
   productDOM.appendChild(addToCartContainer);
   return productDOM;
+}
+
+function formatearPrecio(precio = 0) {
+  return Intl.NumberFormat("es-AR", {style: "currency", currency: "ARS", minimumFractionDigits: 2, maximumFractionDigits: 2}).format(precio);
 }
 
 function crearTodosProductosEnDOM(productos) { // recibe [ [id, Producto], [id, Producto], ... ]
@@ -563,8 +576,10 @@ function cargarProductoFull(){
     else if (parseInt(input.value) < parseInt(input.min)) input.value = input.min;
   });
 
+  
   const addToCart = document.getElementById("add-to-cart-button")
   addToCart.addEventListener("click", () => {
+    debugger
     const cantidad = parseInt(amountToCart.value)
     const mensaje = `Se ${cantidad > 1 ? "añadieron" : "añadio"} ${cantidad} ${producto.nombre} al carrito`
     aniadirProdCarrito(idProducto, cantidad, mensaje)
@@ -592,8 +607,8 @@ function crearProductoFull(producto) {
               <h1>${producto.nombre}</h1>
           </div>
           <div class="product-full-precio-container">
-              ${producto.descuento ? `<h3>${Intl.NumberFormat("es-AR", {style: "currency", currency: "ARS", minimumFractionDigits: 2, maximumFractionDigits: 2}).format(producto?.precio || 0)}</h3> <span>% ${Math.round(producto.descuento)}</span>` : ""}
-              <h2>${Intl.NumberFormat("es-AR", {style: "currency", currency: "ARS", minimumFractionDigits: 2, maximumFractionDigits: 2}).format(producto?.precioConDescuento() || 0)}</h2>
+              ${producto.descuento ? `<h3>${formatearPrecio(producto?.precio)}</h3><span>% ${Math.round(producto.descuento)}</span>` : ""}
+              <h2>${formatearPrecio(producto.precioConDescuento())}</h2>
           </div>
           <div class="product-buy-container">
               <div class="product-full-stock-container">
@@ -614,9 +629,7 @@ function crearProductoFull(producto) {
 }
 
 function aniadirProdCarrito(id, cantidad = 1, mensaje = "Se añadio al carrito") {
-  if (tienda.ingresarProductoAlCarrito(id, cantidad))
-    alert(mensaje);
-  else 
+  if (!tienda.ingresarProductoAlCarrito(id, cantidad))
     alert("No se pudo añadir el producto al carrito\nPuede que no haya suficiente stock de este producto");
 }
 
@@ -653,6 +666,7 @@ botonCerrarCarro.addEventListener("click", () => abrirCerrarCarrito())
 
 function abrirCerrarCarrito() {
   const body = document.body;
+  actualizarPrecioFinal()
   body.classList.toggle("open-cart")
 }
 
@@ -660,8 +674,9 @@ function productoCarrito(id, cantidad) {
   const producto = tienda.gestorProductos.obtenerPorID(id)
   const prodCarrito = document.createElement("div")
   prodCarrito.classList.add("item-carrito")
+  prodCarrito.id = `p-${id}`;
   prodCarrito.innerHTML = `
-    <div class="imagen-prod" id="${id}">
+    <div class="imagen-prod">
         <img src="${producto?.imagen || ""}">
     </div>
     <div class="nombre-prod">
@@ -669,21 +684,43 @@ function productoCarrito(id, cantidad) {
     </div>
     <div class="cantidad-prod manage-quantity">
     </div>
-    <div class="precio-prod">${producto.precioConDescuento()}</div>
-    <div class="subtotal-item">${producto.precioConDescuento() * cantidad}</div>`;
+    <div class="precio-prod">${formatearPrecio(producto.precioConDescuento())}</div>
+  `;
   
+  const subTot = document.createElement("div")
+  subTot.classList.add("subtotal-item")
+  subTot.innerText = formatearPrecio(producto.precioConDescuento() * cantidad)
+  prodCarrito.appendChild(subTot);
+
   const cantidadCont = prodCarrito.querySelector(".cantidad-prod")
   const totalItems = document.createElement("input")
   totalItems.type = "number"
   totalItems.min = "0"
   totalItems.max = producto.stock;
   totalItems.value = cantidad;
-  totalItems.id = "amount-to-cart"
   totalItems.addEventListener("focusout", (event) => {
     const input = event.target;
-    if (parseInt(input.value) > parseInt(input.max)) input.value = input.max;
-    else if (parseInt(input.value) < parseInt(input.min)) input.value = input.min;
-    tienda.carrito.setearCantidad(id, parseInt(input.value), tienda.gestorProductos)
+    let cantidad = parseInt(input.value);
+    const maxCantidad = producto.stock;
+
+    if (isNaN(cantidad)) {
+      input.value = tienda.carrito.obtenerCantidadItem(id);
+      return;
+    }
+
+    cantidad = Math.max(1, Math.min(cantidad, maxCantidad));
+    input.value = cantidad;
+    tienda.carrito.setearCantidad(id, cantidad, tienda.gestorProductos);
+
+    if (cantidad === 1) {
+      menos.innerText = "X";
+      menos.style.color = "red";
+    } else {
+      menos.innerText = "-";
+      menos.style.color = "black";
+    }
+    subTot.innerText = formatearPrecio(producto.precioConDescuento() * cantidad);
+    actualizarPrecioFinal()
   })
 
   const menos = document.createElement("button")
@@ -695,32 +732,44 @@ function productoCarrito(id, cantidad) {
   
   menos.addEventListener("click", () => {
     totalItems.stepDown()
-    if (parseInt(totalItems.value) === 1) {
+    let value = parseInt(totalItems.value)
+    if (value === 1) {
       menos.innerText = "X"
       menos.style.color = "red"
-    } else if (parseInt(totalItems.value) === 0){
+    } else if (value === 0){
       prodCarrito.remove()
       tienda.carrito.removerProducto(id)
       actualizarIndicadorCarrito()
+      actualizarPrecioFinal()
       return
     }
-    tienda.carrito.removerProducto(id)
     
+    tienda.carrito.removerProducto(id)
+    subTot.innerText = formatearPrecio(producto.precioConDescuento() * value)
+    actualizarPrecioFinal()
   })
 
   const mas = document.createElement("button")
+  mas.classList.add("aniadir")
   mas.innerText = "+"
   mas.addEventListener("click", () => {
-    if (parseInt(totalItems.value) === 1){
+    if (parseInt(totalItems.value) <= 1){
       menos.innerText = "-"
       menos.style.color = "black"
     }
     totalItems.stepUp()
     tienda.carrito.aniadirProducto(id, 1, tienda.gestorProductos)
+    subTot.innerText = formatearPrecio(producto.precioConDescuento() * parseInt(totalItems.value))
+    actualizarPrecioFinal()
   })
   
   cantidadCont.appendChild(menos)
   cantidadCont.appendChild(totalItems)
   cantidadCont.appendChild(mas)
   return prodCarrito;
+}
+
+const precioFinalDOM = document.getElementById("precio-final")
+function actualizarPrecioFinal() {
+  precioFinalDOM.innerText = formatearPrecio(tienda.carrito.calcularPrecioFinal(tienda.gestorProductos))
 }

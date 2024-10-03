@@ -518,10 +518,11 @@ class Tienda {
 }
 
 async function cargarItems(rutaActual) {
+  debugger
   try {
-    let route = "./data/productos.json"
-    if (rutaActual === "./pages/product.html")
-      route = "../data/productos-test.json"
+    let route = "/data/productos.json"
+    if (rutaActual === "/pages/product.html")
+      route = "../data/productos.json"
     const respuesta = await fetch(route);
     if (!respuesta.ok) throw new Error(`Error al cargar el JSON: ${respuesta.statusText}`);
     return await respuesta.json();
@@ -689,7 +690,7 @@ function crearProductoFull(producto) {
   productFullContainer.classList.add("product-full-container");
   productFullContainer.innerHTML = `
       <div class="product-full-image-container">
-          <img src="${producto.imagen || './assets/regaleria logo.webp'}" alt="Imagen de ${producto.nombre}">
+          <img src="${producto.imagen || '../assets/regaleria logo.webp'}" alt="Imagen de ${producto.nombre}">
       </div>
       <div class="product-description">
           <h3>Descripción</h3>

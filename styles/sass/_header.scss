@@ -40,16 +40,26 @@ header {
   }
 }
 
-.header-user-cart {
-  display: flex;
+#cart-container {
   position: relative;
-  gap: 10px;
-
   svg {
     &:hover {
       cursor: pointer;
     }
   }
+}
+
+#cart-amount-items {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background-color: $lavander;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  right: -3px;
 }
 
 .header-navbar {

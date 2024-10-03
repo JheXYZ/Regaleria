@@ -2,19 +2,6 @@
   cursor: pointer;
 }
 
-#cart-amount-items {
-  display: none;
-  justify-content: center;
-  align-items: center;
-  background-color: $lavander;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  right: -3px;
-}
-
 .full-carrito {
   z-index: 2;
   position: fixed;
@@ -30,6 +17,7 @@
   grid-template-rows: 50px 50px 1fr 100px;
   gap: 10px;
   padding-inline: 10px;
+  padding-top: 10px;
   transition: 500ms cubic-bezier(.5,0,0,1);
   h3 {
     align-self: center;
@@ -81,13 +69,31 @@ header, main, main + footer {
       cursor: pointer;
     }
   }
+}
 
+#clear-cart {
+  background: radial-gradient(circle, rgb(255, 100, 0), red);
+  border-radius: 5px;
+  place-content: center;
+  svg {
+    transition: 200ms cubic-bezier(.5,0,0,1);
+  }
+  &:hover {
+    svg {
+      transform: scale(1.2);
+    }
+  }
+  &:active {
+    svg {
+      transform: scale(1);
+    }
+  }
 }
 
 .lista-carrito {
   display: grid;
   grid-auto-rows: 50px;
-  overflow: scroll;
+  overflow-y: auto;
   .item-carrito :first-child {
     padding-left: 5px;
   }
@@ -114,8 +120,22 @@ header, main, main + footer {
     border-radius: 5px;
     background-color: $amethyst;
   }
-  .cantidad-prod input {
-    min-width: auto;
+  .cantidad-prod {
+    button{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: fit-content;
+      color: #444;
+      
+      svg {
+        
+        width: 90%;
+      }
+    }
+    input {
+      min-width: auto;
+    }
   }
   .nombre-prod {
     overflow: hidden;

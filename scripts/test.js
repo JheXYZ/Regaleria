@@ -5,15 +5,16 @@ class Producto {
   }
 
   operarStock(cantidad) {
-    if (cantidad < 0 && Math.abs(cantidad) > this.stock)
-      //no se le puede restar mas de lo que hay de stock, siempre tendra un valor positivo o 0
+    const nuevoStock = this.stock + cantidad;
+    //no se le puede restar mas de lo que hay de stock, siempre tendra un valor positivo o 0
+    if (nuevoStock < 0)
       return -1;
-    this.stock = this.stock + cantidad;
+    this.stock = nuevoStock;
     return this.stock;
   }
 
   precioConDescuento() {
-    if (this.descuento < 0) return this.precio;
+    if (this.descuento <= 0) return this.precio;
     return this.precio * ((100 - this.descuento) / 100);
   }
 
@@ -127,9 +128,15 @@ class GestorProductos extends Gestor {
     return true;
   }
 
-  parsearYAniadirProducto(producto = { nombre: "", descripcion: "", precio: 0, stock: 0, descuento: 0, imagen: "" }) {
+  parsearYAniadirProducto(producto = { nombre: "", descripcion: "", precio: 0, stock: 0, descuento: 0, imagen: "" }, stockLocalStorage) {
+    // debugger
     const productoFinal = Producto.parsearProductoDeJSON(producto);
-    this.aniadir(productoFinal);
+    const id = this.aniadir(productoFinal);
+    const stockActualizado = stockLocalStorage.get(id);
+    if (!isNaN(stockActualizado) && stockActualizado >= 0) {
+      productoFinal.stock = stockActualizado;
+      this.actualizarProducto(id, productoFinal);
+    }
     return productoFinal;
   }
 
@@ -142,6 +149,11 @@ class GestorProductos extends Gestor {
       this.actualizarIDValores(productoViejo, producto);
     }
     return producto;
+  }
+
+  modificacionValida(id, cantidad) {
+    let { stock } = this.obtenerPorID(id);
+    return stock + cantidad >= 0;
   }
 
   obtenerTodosProductos() {
@@ -201,8 +213,10 @@ class GestorRelaciones {
   }
 
   parsearCategoriasYSubcategorias(item, gestorCategorias, gestorProductos) { //item = {categoria:"", subcategorias: [ {categoria:"", productos: []} ]}
+    // debugger
     let categoriaPrincipal = new Categoria(item.categoria);
     if (this.subcategorias.has(categoriaPrincipal)) return false;
+    const stockDeProductosLocalStorage = new Map(JSON.parse(localStorage.getItem("regaleria-productos-actualizados")) || [])
 
     gestorCategorias.aniadirCategoria(categoriaPrincipal);
     for (let { categoria, productos } of item.subcategorias) {
@@ -210,7 +224,7 @@ class GestorRelaciones {
       gestorCategorias.aniadirCategoria(subcat);
       this.nuevasSubcategoriasParaCategoria(categoriaPrincipal, subcat);
       for (let prodJSON of productos) {
-        const prod = gestorProductos.parsearYAniadirProducto(prodJSON);
+        const prod = gestorProductos.parsearYAniadirProducto(prodJSON, stockDeProductosLocalStorage);
         this.nuevaRelacion(prod, subcat);
         this.nuevaRelacion(prod, categoriaPrincipal);
       }
@@ -339,25 +353,16 @@ class Carrito {
     return this.itemsCarrito.get(id)
   }
 
-  finalizarCompra(tienda = new Tienda()) {
-    let tiendaModificada = tienda;
-    let compraValida = [...this.itemsCarrito.entries()].every(([id, cantidad]) => {
-      return tiendaModificada.gestorProductos.modificarStock(id, cantidad * -1); // se multiplica por -1 a cantidad por que se está restando la cantidad al stock (modificarStock() soporta suma y resta)
-    });
-
-    return compraValida ? tiendaModificada.gestorProductos : false;
-  }
-
   actualizarCarrito() {
     localStorage.setItem("regaleria-carrito", JSON.stringify([...this.itemsCarrito.entries()]));
   }
 
   cargarFullCarrito() {
+    const listaCarrito = document.querySelector(".lista-carrito")
+    listaCarrito.innerHTML = "";
     if (this.obtenerTotalItems() === 0)
       return;
 
-    const listaCarrito = document.querySelector(".lista-carrito")
-    listaCarrito.innerHTML = "";
     this.itemsCarrito.entries().forEach(([id, cantidad]) => {
       listaCarrito.appendChild(productoCarrito(id, cantidad))
     })
@@ -462,16 +467,54 @@ class Tienda {
     return this.carrito.aniadirProducto(id, cantidad, this.gestorProductos)
   }
 
-  finalizarCompra() {
-    let productosActualizados = this.carrito.finalizarCompra(this);
-    if (!productosActualizados) return false;
-    this.gestorProductos = productosActualizados;
+  vaciarCarrito() {
+    if (this.carrito.obtenerTotalItems() === 0)
+      return;
+    
     this.carrito.itemsCarrito.clear();
     this.carrito.actualizarCarrito();
+    actualizarCarritoDOM()
+    actualizarIndicadorCarrito()
+    abrirCerrarCarrito()
+    Toastify({
+      text: "Carrito vaciado",
+      gravity: "top",
+      position: "center",
+      style: {
+        background: "linear-gradient(to right, #357DED, #5603FF)",
+      }
+    }).showToast();
+  }
+
+  finalizarCompra() {
+    if (!this.#compraValida()) return false;
+    let productoIDConStock = Array.from(this.carrito.itemsCarrito.keys()).map(id => {
+      return {id: id, stock: this.gestorProductos.obtenerPorID(id).stock }
+    });
+
+    this.#modificarStockLocalStorage(productoIDConStock);
+    this.carrito.itemsCarrito.clear();
+    this.carrito.actualizarCarrito();
+    actualizarCarritoDOM()
+    actualizarIndicadorCarrito()
     return true;
   }
 
+  #compraValida() {
+    const idProductosCarrito = Array.from(this.carrito.itemsCarrito.entries())
+    let compraValida = idProductosCarrito.every(([id, cantidad]) => 
+      this.gestorProductos.modificacionValida(id, cantidad * -1)); // se multiplica por -1 a cantidad por que se está restando la cantidad al stock (modificarStock() soporta suma y resta)
+    
+    if (compraValida)
+      idProductosCarrito.forEach(([id, cantidad]) => this.gestorProductos.modificarStock(id, cantidad * -1))
+    return compraValida
+  }
 
+  #modificarStockLocalStorage(productos) { // productos = [{id: 0, stock: 0},...]
+    const productosLocalStorage = new Map(JSON.parse(localStorage.getItem("regaleria-productos")) || [])
+    productos.forEach(({ id, stock }) => productosLocalStorage.set(id, stock))
+    localStorage.setItem("regaleria-productos-actualizados", JSON.stringify(Array.from(productosLocalStorage)))
+  }
 }
 
 async function cargarItems() {
@@ -549,7 +592,7 @@ function crearProductoHTML(producto, id) {
   addToCartButton.alt = "añadir al carrito";
   addToCartButton.addEventListener("click", () => {
     aniadirProdCarrito(id, 1, `Se añadio: ${producto?.nombre} al carrito`)
-    actualizarCarrito()
+    actualizarCarritoDOM()
   })
 
   // Svg del boton añadir
@@ -602,7 +645,7 @@ function crearCategoriaConProductos(categoria, productsContainer) { // categoria
 }
 
 function cargarProductoFull(){
-  const idProducto = obtenerProductoID()
+  const idProducto = obtenerProductoIDdeURI()
   if (isNaN(idProducto) || !tienda.gestorProductos.existeID(idProducto))
     return
 
@@ -629,11 +672,11 @@ function cargarProductoFull(){
     const cantidad = parseInt(amountToCart.value)
     const mensaje = `Se ${cantidad > 1 ? `añadieron ${cantidad}` : "añadio"}: ${producto.nombre} al carrito`
     aniadirProdCarrito(idProducto, cantidad, mensaje)
-    actualizarCarrito()
+    actualizarCarritoDOM()
   })
 }
 
-function obtenerProductoID() {
+function obtenerProductoIDdeURI() {
   const urlParams = new URLSearchParams(window.location.search);
   return parseInt(urlParams.get('id')); // Obtiene el valor del parámetro "id"
 }
@@ -715,7 +758,7 @@ function actualizarIndicadorCarrito(){
   indicarItemsCarrito(tienda.obtenerCantidadCarrito())
 }
 
-function actualizarCarrito() {
+function actualizarCarritoDOM() {
   tienda.carrito.cargarFullCarrito()
   actualizarPrecioFinal()
 }
@@ -745,6 +788,11 @@ function abrirCerrarCarrito() {
   body.classList.toggle("open-cart")
   // desabilitarBotones(containerBotones)
 }
+
+const clearCart = document.getElementById("clear-cart")
+clearCart.addEventListener("click", () => {
+  tienda.vaciarCarrito()
+})
 
 const containerBotones = document.getElementsByClassName("product-addtocart-container")
 function desabilitarBotones(divs) {
@@ -800,8 +848,10 @@ function crearInputCantidad(id, cantidad, maxStock, subTotalElem, precioUnitario
 
 function crearBotonMenos(id, inputElem, subTotalElem, precioUnitario) {
   const boton = document.createElement("button");
-  boton.innerText = inputElem.value === "1" ? "X" : "-";
-  boton.style.color = inputElem.value === "1" ? "red" : "black";
+  boton.innerHTML = inputElem.value === "1" ? 
+    `<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-bag-minus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12.5 21h-3.926a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304h11.339a2 2 0 0 1 1.977 2.304l-.73 4.744" /><path d="M9 11v-5a3 3 0 0 1 6 0v5" /><path d="M16 19h6" /></svg>` 
+    : `<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-minus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /></svg>`;
+  boton.style.color = inputElem.value === "1" ? "red" : "";
   
   boton.addEventListener("click", () => {
     inputElem.stepDown();
@@ -809,6 +859,7 @@ function crearBotonMenos(id, inputElem, subTotalElem, precioUnitario) {
     if (newValue === 0) {
       tienda.carrito.removerProducto(id);
       inputElem.closest(".item-carrito").remove();
+      actualizarCarritoDOM();
       actualizarIndicadorCarrito();
     } else {
       tienda.carrito.removerProducto(id);
@@ -822,7 +873,7 @@ function crearBotonMenos(id, inputElem, subTotalElem, precioUnitario) {
 function crearBotonMas(id, inputElem, subTotalElem, precioUnitario) {
   const boton = document.createElement("button");
   boton.classList.add("aniadir");
-  boton.innerText = "+";
+  boton.innerHTML = `<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>`;
   
   boton.addEventListener("click", () => {
     inputElem.stepUp();
@@ -836,8 +887,10 @@ function crearBotonMas(id, inputElem, subTotalElem, precioUnitario) {
 
 function actualizarElementos(cantidad, subTotalElem, precioUnitario) {
   const menosBoton = subTotalElem.parentElement.querySelector("button");
-  menosBoton.innerText = cantidad === 1 ? "X" : "-";
-  menosBoton.style.color = cantidad === 1 ? "red" : "black";
+  menosBoton.innerHTML= cantidad === 1 ? 
+    `<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-bag-minus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12.5 21h-3.926a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304h11.339a2 2 0 0 1 1.977 2.304l-.73 4.744" /><path d="M9 11v-5a3 3 0 0 1 6 0v5" /><path d="M16 19h6" /></svg>`
+    : `<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-minus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /></svg>`;
+  menosBoton.style.color = cantidad === 1 ? "red" : "";
   subTotalElem.innerText = formatearPrecio(precioUnitario * cantidad);
   actualizarPrecioFinal();
 }
@@ -851,31 +904,26 @@ const finalCompra = document.getElementById("finalizar-compra")
 const modalFinalCompra = document.getElementById("finalize-purchase-modal")
 const closeModalList = document.getElementsByClassName("close-modal")
 
-modalFinalCompra.addEventListener("cancel", () => {
-  modalFinalCompra.style.display = "none"
-  abrirCerrarCarrito()
-})
-finalCompra.addEventListener("click", () => {
-  cargarTablaFinalCompra()
-  abrirCerrarCarrito()
-  modalFinalCompra.style.display = "block"
-  modalFinalCompra.showModal()
-  modalFinalCompra.classList.remove('modal-open');
-})
-Array.from(closeModalList).forEach(boton => boton.addEventListener("click", () => {
+modalFinalCompra.addEventListener("cancel", () => closeModal())
+finalCompra.addEventListener("click", () => tienda.obtenerCantidadCarrito() && abrirModal())
+Array.from(closeModalList).forEach(boton => boton.addEventListener("click", () => closeModal()));
+
+function closeModal() {
   abrirCerrarCarrito()
   modalFinalCompra.classList.add("modal-open")
   setTimeout(() => {
     modalFinalCompra.style.display = "none"
     modalFinalCompra.close()
   }, 400);
-}))
+}
 
-const confirmPurchase = document.getElementById("confirm-purchase")
-confirmPurchase.addEventListener("click", () => {
-  modalFinalCompra.close()
-  modalFinalCompra.style.display = "none"
-})
+function abrirModal(){
+  cargarTablaFinalCompra()
+  abrirCerrarCarrito()
+  modalFinalCompra.style.display = "flex"
+  modalFinalCompra.showModal()
+  modalFinalCompra.classList.remove('modal-open');
+}
 
 function cargarTablaFinalCompra() {
   const tableBody = document.querySelector("tbody")
@@ -895,5 +943,35 @@ function cargarTablaFinalCompra() {
   const totalRow = document.getElementById("total-purchase")
   totalRow.innerText = formatearPrecio(finalPrice);
 }
+
+const confirmPurchase = document.getElementById("confirm-purchase")
+confirmPurchase.addEventListener("click", () => {
+  if (tienda.finalizarCompra()) {
+    modalFinalCompra.close()
+    modalFinalCompra.style.display = "none"
+    Toastify({
+      text: "Compra realizada con éxito",
+      duration: 6000,
+      stopOnFocus: true,
+      position: "center",
+      style: {
+        textAlign: "center",
+        background: "linear-gradient(to right, green, rgb(0, 180, 0))",
+      }
+    }).showToast();
+  } else {
+    Toastify({
+      text: "No se pudo realizar la compra",
+      duration: 6000,
+      stopOnFocus: true,
+      position: "center",
+      style: {
+        textAlign: "center",
+        background: "linear-gradient(to right, rgb(255, 120, 0), red)",
+      }
+    }).showToast();
+  }
+})
+
 
 

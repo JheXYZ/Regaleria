@@ -520,7 +520,7 @@ class Tienda {
 async function cargarItems(rutaActual) {
   debugger
   try {
-    let route = "/data/productos.json"
+    let route = "./data/productos.json"
     if (rutaActual === "/pages/product.html" || rutaActual === "/JavaScript-Course/pages/product.html")
       route = "../data/productos.json"
     const respuesta = await fetch(route);

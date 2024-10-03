@@ -519,7 +519,7 @@ class Tienda {
 
 async function cargarItems() {
   try {
-    const respuesta = await fetch("../data/productos.json");
+    const respuesta = await fetch("./data/productos.json");
     if (!respuesta.ok) throw new Error(`Error al cargar el JSON: ${respuesta.statusText}`);
     return await respuesta.json();
   } catch (error) {

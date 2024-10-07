@@ -810,7 +810,7 @@ function actualizarCarritoDOM() {
 //main
 const rutaActual = window.location.pathname;
 // Verificar la ruta actual
-const validURL = rutaActual === '/' || rutaActual === '/index.html' || rutaActual === "/#" || rutaActual === "/JavaScript-Course/" || rutaActual === "/JavaScript-Course/#"
+const validURL = rutaActual === '/' || rutaActual === '/index.html' || rutaActual === "/#" || rutaActual === "/JavaScript-Course/" || rutaActual === "/JavaScript-Course/index.html"
 let items = await cargarItems(rutaActual);
 let tienda = cargarTienda(items);
 actualizarIndicadorCarrito()

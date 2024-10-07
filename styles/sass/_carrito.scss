@@ -155,6 +155,10 @@ header, main, main + footer {
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  // transform: translateY(-10px);
   font-size: 1.5rem;
+
+  &:disabled {
+    background-color: #444;
+    cursor: not-allowed;
+  }
 }

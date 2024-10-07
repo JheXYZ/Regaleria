@@ -360,8 +360,12 @@ class Carrito {
   cargarFullCarrito() {
     const listaCarrito = document.querySelector(".lista-carrito")
     listaCarrito.innerHTML = "";
-    if (this.obtenerTotalItems() === 0)
+    const finalizarCompra = document.getElementById("finalizar-compra")
+    if (this.obtenerTotalItems() === 0){
+      finalizarCompra.disabled = true;
       return;
+    }
+    finalizarCompra.disabled = false;
 
     this.itemsCarrito.entries().forEach(([id, cantidad]) => {
       listaCarrito.appendChild(productoCarrito(id, cantidad))
@@ -518,7 +522,7 @@ class Tienda {
 }
 
 async function cargarItems(rutaActual) {
-  debugger
+  // debugger
   try {
     let route = "./data/productos.json"
     if (rutaActual === "/pages/product.html" || rutaActual === "/JavaScript-Course/pages/product.html")
@@ -555,6 +559,7 @@ function crearProductoHTML(producto, id) {
   const productImage = document.createElement("img");
   productImage.src = producto?.imagen || "assets/regaleria logo.webp";
   productImage.alt = `imagen del producto ${producto?.name || ""}`;
+  productImage.loading = "lazy";
 
   // Añadir <img> dentro del <a> y luego el <a> dentro del <picture>
   productLink.appendChild(productImage);
@@ -618,7 +623,11 @@ function formatearPrecio(precio = 0) {
 
 function crearTodasLasCategoriasConProductosEnDOM(categoriasConProductos) {
   const productsContainer = document.getElementById("products-container-main");
-  categoriasConProductos.forEach(cat => crearCategoriaConProductos(cat, productsContainer))
+  const headerNavbarUl = document.querySelector(".header-navbar").children[0];
+  categoriasConProductos.forEach(cat => {
+    crearCategoriaConProductos(cat, productsContainer)
+    crearCategoriaEnHeader(cat, headerNavbarUl)
+  })
 }
 
 function crearCategoriaConProductos(categoria, productsContainer) { // categoria = [ { nombre, subCategorias: [ { nombre, productos: [ producto, ... ] }, ... ] }, ... ]
@@ -629,6 +638,7 @@ function crearCategoriaConProductos(categoria, productsContainer) { // categoria
   categoriaDOM.classList.add("category-container")
   const categoriaTitle = document.createElement("h2")
   categoriaTitle.textContent = nombre
+  categoriaTitle.id = `categoria-${nombre.toLowerCase().replace(/\s/g, "-")}`
   categoriaTitle.classList.add("category-title")
   categoriaDOM.appendChild(categoriaTitle)
 
@@ -637,6 +647,7 @@ function crearCategoriaConProductos(categoria, productsContainer) { // categoria
   subCategorias.forEach(subCat => {
     const subcategoryDOM = document.createElement("h3")
     subcategoryDOM.textContent = subCat.nombre
+    subcategoryDOM.id = `subcategoria-${subCat.nombre.toLowerCase().replace(/\s/g, "-")}`
     subcategoryDOM.classList.add("subcategory-title")
     subcategoryContainer.appendChild(subcategoryDOM)
     const productsContainer = document.createElement("div")
@@ -648,7 +659,36 @@ function crearCategoriaConProductos(categoria, productsContainer) { // categoria
   productsContainer.appendChild(categoriaDOM);
 }
 
-function cargarProductoFull(){
+function crearCategoriaEnHeader(categoria = { nombre: "", subCategorias: [{ nombre: "" }] }, headerNavbar, rutaActual = "/") {
+  const categoriaDOM = document.createElement("li");
+  const categoriaLink = document.createElement("a");
+  categoriaLink.textContent = categoria.nombre;
+
+  const isIndex = rutaActual === "/" || rutaActual === "/index.html";
+  const categoriaSlug = categoria.nombre.toLowerCase().replace(/\s/g, "-");
+  
+  categoriaLink.href = isIndex ? `#categoria-${categoriaSlug}` : `../#categoria-${categoriaSlug}`;
+  categoriaDOM.appendChild(categoriaLink);
+
+  const subcategorias = document.createElement("ul");
+  categoria.subCategorias.forEach(subCat => {
+    const subcategoriaLi = document.createElement("li");
+    const subcategoriaLink = document.createElement("a");
+    const subCategoriaSlug = subCat.nombre.toLowerCase().replace(/\s/g, "-");
+    
+    subcategoriaLink.textContent = subCat.nombre;
+    subcategoriaLink.href = isIndex ? `#subcategoria-${subCategoriaSlug}` : `../#subcategoria-${subCategoriaSlug}`;
+    subcategoriaLi.appendChild(subcategoriaLink);
+    subcategorias.appendChild(subcategoriaLi);
+  });
+  
+  categoriaDOM.appendChild(subcategorias);
+  headerNavbar.appendChild(categoriaDOM);
+}
+
+function cargarProductoFull(categoriasConProductos){
+  const headerNavbar = document.querySelector(".header-navbar").children[0];
+  categoriasConProductos.forEach(cat => crearCategoriaEnHeader(cat, headerNavbar, window.location.pathname))
   const idProducto = obtenerProductoIDdeURI()
   if (isNaN(idProducto) || !tienda.gestorProductos.existeID(idProducto))
     return
@@ -690,7 +730,7 @@ function crearProductoFull(producto) {
   productFullContainer.classList.add("product-full-container");
   productFullContainer.innerHTML = `
       <div class="product-full-image-container">
-          <img src="${producto.imagen || '../assets/regaleria logo.webp'}" alt="Imagen de ${producto.nombre}">
+          <img loading="lazy" src="../${producto.imagen || '../assets/regaleria logo.webp'}" alt="Imagen de ${producto.nombre}">
       </div>
       <div class="product-description">
           <h3>Descripción</h3>
@@ -775,11 +815,13 @@ let items = await cargarItems(rutaActual);
 let tienda = cargarTienda(items);
 actualizarIndicadorCarrito()
 tienda.carrito.cargarFullCarrito()
+const categoriasConProductos = tienda.obtenerCategoriasConProductos()
 if (validURL) {
-  crearTodasLasCategoriasConProductosEnDOM(tienda.obtenerCategoriasConProductos());
+  crearTodasLasCategoriasConProductosEnDOM(categoriasConProductos);
 } else if (rutaActual === '/pages/product.html' || rutaActual === '/JavaScript-Course/pages/product.html') {
-  cargarProductoFull()
+  cargarProductoFull(categoriasConProductos)
 }
+
 
 const iconoCarrito = document.getElementById("cart-container");
 iconoCarrito.addEventListener("click", () => abrirCerrarCarrito())
@@ -909,7 +951,7 @@ const modalFinalCompra = document.getElementById("finalize-purchase-modal")
 const closeModalList = document.getElementsByClassName("close-modal")
 
 modalFinalCompra.addEventListener("cancel", () => closeModal())
-finalCompra.addEventListener("click", () => tienda.obtenerCantidadCarrito() && abrirModal())
+finalCompra.addEventListener("click", () => tienda.obtenerCantidadCarrito() ? abrirModal() : finalCompra.disabled = true)
 Array.from(closeModalList).forEach(boton => boton.addEventListener("click", () => closeModal()));
 
 function closeModal() {

@@ -10,32 +10,37 @@
             "descripcion": "Set de bloques de construcción clásico para estimular la creatividad y la imaginación.",
             "precio": 12500.5,
             "stock": 55,
-            "descuento": 33
+            "descuento": 33,
+            "imagen": "assets/lego-classic.webp"
           },
           {
             "nombre": "Muñeca Barbie",
             "descripcion": "Muñeca Barbie con accesorios y ropa intercambiable.",
             "precio": 8500.0,
-            "stock": 30
+            "stock": 30,
+            "imagen": "assets/munieca-barbie.webp"
           },
           {
-            "nombre": "Coche de Carreras Hot Wheels",
+            "nombre": "Autitos de Carreras Hot Wheels",
             "descripcion": "Vehículo de juguete a escala con diseño deportivo para carreras emocionantes.",
             "precio": 4000.0,
-            "stock": 100
+            "stock": 100,
+            "imagen": "assets/hot-wheels.webp"
           },
           {
             "nombre": "Pizarra Mágica",
             "descripcion": "Pizarra magnética para dibujar y borrar fácilmente, ideal para niños creativos.",
             "precio": 15000.0,
             "stock": 75,
-            "descuento": 15
+            "descuento": 15,
+            "imagen": "assets/pizarra-magica.webp"
           },
           {
             "nombre": "Puzzle de Animales",
             "descripcion": "Rompecabezas educativo de 24 piezas con ilustraciones de animales.",
             "precio": 4100.0,
-            "stock": 40
+            "stock": 40,
+            "imagen": "assets/rompecabezas.webp"
           }
         ]
       },
@@ -47,32 +52,37 @@
             "descripcion": "Suave peluche en forma de oso panda, ideal para abrazar y decorar.",
             "precio": 5000.0,
             "stock": 60,
-            "descuento": 5
+            "descuento": 5,
+            "imagen": "assets/peluche-oso-panda.webp"
           },
           {
             "nombre": "Peluche Unicornio",
             "descripcion": "Peluche de unicornio con crin colorida y cuerno brillante.",
             "precio": 5000.0,
-            "stock": 45
+            "stock": 45,
+            "imagen": "assets/peluche-unicornio.webp"
           },
           {
             "nombre": "Peluche Elefante",
             "descripcion": "Tierno peluche de elefante con orejas grandes y cuerpo esponjoso.",
             "precio": 5000.0,
             "stock": 80,
-            "descuento": 10
+            "descuento": 10,
+            "imagen": "assets/peluche-elefante.webp"
           },
           {
             "nombre": "Peluche Dinosaurio",
             "descripcion": "Peluche de dinosaurio con detalles realistas y textura suave.",
             "precio": 5000.0,
-            "stock": 70
+            "stock": 70,
+            "imagen": "assets/peluche-dinosaurio.webp"
           },
           {
             "nombre": "Peluche Gato",
             "descripcion": "Peluche de gato con ojos grandes y pelaje suave, perfecto para niños y adultos.",
             "precio": 5000.0,
-            "stock": 50
+            "stock": 50,
+            "imagen": "assets/peluche-gato.webp"
           }
         ]
       }
@@ -87,21 +97,24 @@
           {
             "nombre": "Caja de Regalo Pequeña - 15x10x5 cm",
             "descripcion": "Elegante caja de regalo de tamaño pequeño, ideal para joyería y pequeños recuerdos. Dimensiones: 15x10x5 cm.",
-            "precio": 5.99,
-            "stock": 100
+            "precio": 3100.0,
+            "stock": 100,
+            "imagen": "assets/caja-regalo-pequenia.webp"
           },
           {
             "nombre": "Caja de Regalo Mediana - 25x20x10 cm",
             "descripcion": "Caja de regalo de tamaño mediano con un diseño clásico, perfecta para libros y artículos de tamaño moderado. Dimensiones: 25x20x10 cm.",
-            "precio": 9.99,
-            "stock": 75
+            "precio": 4300.0,
+            "stock": 75,
+            "imagen": "assets/caja-regalo-mediana.webp"
           },
           {
             "nombre": "Caja de Regalo Grande - 40x30x15 cm",
             "descripcion": "Gran caja de regalo con acabado lujoso, ideal para ropa o varios artículos grandes. Dimensiones: 40x30x15 cm.",
-            "precio": 14.99,
+            "precio": 4700.0,
             "stock": 50,
-            "descuento": 15
+            "descuento": 15,
+            "imagen": "assets/caja-regalo-grande.webp"
           }
         ]
       },
@@ -111,26 +124,30 @@
           {
             "nombre": "Tarjeta de Cumpleaños - Flores y Globo",
             "descripcion": "Tarjeta de felicitación con diseño de flores y globo, ideal para cumpleaños. Incluye sobre.",
-            "precio": 2.99,
-            "stock": 200
+            "precio": 2990.0,
+            "stock": 200,
+            "imagen": "assets/tarjeta-feliz-cumpleanios.webp"
           },
           {
             "nombre": "Tarjeta de Felicitaciones - Bebé Recién Nacido",
             "descripcion": "Tierna tarjeta con ilustraciones de bebé y juguetes, perfecta para felicitar por la llegada de un nuevo miembro a la familia.",
-            "precio": 3.49,
-            "stock": 150
+            "precio": 3490.0,
+            "stock": 150,
+            "imagen": "assets/tarjeta-feliz-bebe.webp"
           },
           {
             "nombre": "Tarjeta de Aniversario - Corazones y Oro",
             "descripcion": "Elegante tarjeta con detalles dorados y corazones, ideal para celebrar aniversarios. Incluye sobre decorativo.",
-            "precio": 4.99,
-            "stock": 100
+            "precio": 4990.0,
+            "stock": 100,
+            "imagen": "assets/tarjeta-feliz-aniversario.webp"
           },
           {
             "nombre": "Tarjeta de Graduación - Toga y Birrete",
             "descripcion": "Tarjeta de felicitaciones con diseño de toga y birrete, perfecta para graduaciones. Incluye espacio para mensaje personal.",
-            "precio": 3.99,
-            "stock": 120
+            "precio": 3990.0,
+            "stock": 120,
+            "imagen": "assets/tarjeta-graduacion.webp"
           }
         ]
       }
@@ -145,14 +162,16 @@
           {
             "nombre": "Ramo de Rosas Rojas",
             "descripcion": "Hermoso ramo de 12 rosas rojas frescas, ideal para ocasiones románticas. Las rosas están cuidadosamente seleccionadas para asegurar su calidad y frescura.",
-            "precio": 24.99,
-            "stock": 30
+            "precio": 1500.0,
+            "stock": 30,
+            "imagen": "assets/ramo-de-rosas.webp"
           },
           {
             "nombre": "Orquídea Blanca en Maceta",
             "descripcion": "Elegante orquídea blanca en una maceta decorativa, perfecta para regalar o decorar interiores. Esta planta es conocida por su durabilidad y belleza exótica.",
-            "precio": 34.99,
-            "stock": 20
+            "precio": 4999.0,
+            "stock": 20,
+            "imagen": "assets/orquidea-blanca.webp"
           }
         ]
       },
@@ -162,27 +181,31 @@
           {
             "nombre": "Palo de Brasil",
             "descripcion": "Planta de interior de fácil cuidado con hojas largas y verdes. Ideal para purificar el aire y decorar espacios. Altura aproximada: 60 cm.",
-            "precio": 22.99,
+            "precio": 4899.0,
             "stock": 40,
-            "descuento": 25
+            "descuento": 25,
+            "imagen": "assets/palo-de-brasil.webp"
           },
           {
-            "nombre": "Sukulentas Variadas",
+            "nombre": "Suculentas Variadas",
             "descripcion": "Colección de 4 suculentas diferentes en macetas pequeñas. Perfectas para el hogar o oficina, requieren poco riego y mantenimiento. Cada planta mide entre 5-10 cm.",
-            "precio": 15.99,
-            "stock": 60
+            "precio": 3999.0,
+            "stock": 60,
+            "imagen": "assets/suculentas.webp"
           },
           {
             "nombre": "Planta de Lavanda en Maceta",
             "descripcion": "Planta de lavanda con fragancia natural, ideal para aromatizar interiores o jardines. Maceta incluida. Altura aproximada: 30 cm.",
-            "precio": 18.49,
-            "stock": 35
+            "precio": 2399.0,
+            "stock": 35,
+            "imagen": "assets/lavanda-maceta.webp"
           },
           {
             "nombre": "Helecho de Boston",
             "descripcion": "Helecho de Boston con hojas frondosas y verdes. Excelente para interiores con buena humedad. Altura aproximada: 45 cm. Incluye maceta decorativa.",
-            "precio": 27.99,
-            "stock": 25
+            "precio": 2799.0,
+            "stock": 25,
+            "imagen": "assets/helecho-boston.webp"
           }
         ]
       }
@@ -197,39 +220,45 @@
           {
             "nombre": "Alfombra Moderna - 120x80 cm",
             "descripcion": "Alfombra moderna de diseño abstracto en tonos neutros, ideal para salones o habitaciones. Material suave y fácil de limpiar.",
-            "precio": 49.99,
-            "stock": 20
+            "precio": 4999.0,
+            "stock": 20,
+            "imagen": "assets/alfombra.webp"
           },
           {
             "nombre": "Lámpara de Mesa con Base de Madera",
             "descripcion": "Lámpara de mesa elegante con base de madera y pantalla de lino. Perfecta para iluminar escritorios o mesas de noche.",
-            "precio": 34.99,
-            "stock": 25
+            "precio": 3499.0,
+            "stock": 25,
+            "imagen": "assets/lampara-mesa.webp"
           },
           {
             "nombre": "Reloj de Pared Retro",
             "descripcion": "Reloj de pared con diseño retro en estilo vintage, ideal para decorar cualquier habitación. Funciona con baterías.",
-            "precio": 29.99,
-            "stock": 15
+            "precio": 2999.0,
+            "stock": 15,
+            "imagen": "assets/reloj-de-pared.jpg"
           },
           {
             "nombre": "Cojines Decorativos - Set de 2",
             "descripcion": "Set de 2 cojines decorativos con fundas de algodón en colores vivos. Perfectos para añadir un toque de color y confort a tu sofá.",
-            "precio": 22.99,
+            "precio": 2299.0,
             "stock": 30,
-            "descuento": 10
+            "descuento": 10,
+            "imagen": "assets/cojines-decorativos.jpg"
           },
           {
             "nombre": "Espejo de Pared con Marco Dorado",
             "descripcion": "Espejo de pared con marco dorado elegante, ideal para decorar pasillos o salas de estar. Dimensiones: 60x40 cm.",
-            "precio": 59.99,
-            "stock": 10
+            "precio": 5999.0,
+            "stock": 10,
+            "imagen": "assets/espejo-dorado.webp"
           },
           {
             "nombre": "Portavelas de Cristal",
             "descripcion": "Portavelas de cristal con diseño elegante y moderno. Ideal para crear un ambiente acogedor en cualquier habitación. Incluye velas.",
-            "precio": 14.99,
-            "stock": 40
+            "precio": 1499.0,
+            "stock": 40,
+            "imagen": "assets/portavelas-cristal.webp"
           }
         ]
       }
@@ -244,22 +273,25 @@
           {
             "nombre": "Aritos de Plata con Zirconia",
             "descripcion": "Aritos de plata esterlina con piedras de zirconia cúbica, diseño clásico y elegante. Ideal para el uso diario o ocasiones especiales.",
-            "precio": 29.99,
+            "precio": 9899.0,
             "stock": 50,
-            "descuento": 20
+            "descuento": 20,
+            "imagen": "assets/aritos-plata-zirconia.webp"
           },
           {
             "nombre": "Aritos de Oro Rosa - 18K",
             "descripcion": "Aritos de oro rosa de 18 quilates con un acabado pulido. Diseño moderno y sofisticado, perfecto para combinar con cualquier atuendo.",
-            "precio": 79.99,
-            "stock": 25
+            "precio": 34999.0,
+            "stock": 25,
+            "imagen": "assets/aritos-oro-rosa-18k.webp"
           },
           {
             "nombre": "Aritos de Acero Inoxidable con Perla",
             "descripcion": "Aritos de acero inoxidable con perlas falsas, ofreciendo un look chic y duradero. Resistente al agua y a la corrosión, ideal para el uso diario.",
-            "precio": 15.99,
+            "precio": 11999.0,
             "stock": 75,
-            "descuento": 35
+            "descuento": 35,
+            "imagen": "assets/aritos-acero-inoxidable-perla.webp"
           }
         ]
       },
@@ -269,14 +301,16 @@
           {
             "nombre": "Collar de Plata con Colgante de Corazón",
             "descripcion": "Elegante collar de plata esterlina con colgante en forma de corazón. Perfecto para ocasiones románticas y como regalo especial. Longitud de cadena: 45 cm.",
-            "precio": 39.99,
-            "stock": 30
+            "precio": 3999.0,
+            "stock": 30,
+            "imagen": "assets/collar-plata-corazon.webp"
           },
           {
             "nombre": "Collar de Oro con Perlas Naturales",
             "descripcion": "Collar de oro de 18 quilates con perlas naturales. Diseño clásico y sofisticado, ideal para eventos formales y ocasiones especiales. Longitud de cadena: 50 cm.",
-            "precio": 129.99,
-            "stock": 20
+            "precio": 12999.0,
+            "stock": 20,
+            "imagen": "assets/collar-oro-perlas.webp"
           }
         ]
       },
@@ -286,20 +320,23 @@
           {
             "nombre": "Sombrero de Paja - Estilo Panamá",
             "descripcion": "Sombrero de paja estilo Panamá, ligero y ventilado, ideal para protegerse del sol durante el verano. Talla ajustable.",
-            "precio": 29.99,
-            "stock": 40
+            "precio": 2999.0,
+            "stock": 40,
+            "imagen": "assets/sombrero-paja.webp"
           },
           {
             "nombre": "Sombrero de Lana - Fedora",
             "descripcion": "Sombrero de lana en estilo Fedora, elegante y cálido, perfecto para el otoño e invierno. Disponible en varios colores. Talla única.",
-            "precio": 49.99,
-            "stock": 25
+            "precio": 4999.0,
+            "stock": 25,
+            "imagen": "assets/sombrero-fedora-lana.webp"
           },
           {
             "nombre": "Gorra Deportiva - Ajustable",
             "descripcion": "Gorra deportiva de algodón con visera curva y ajuste trasero. Ideal para actividades al aire libre y deportes. Disponible en varios colores.",
-            "precio": 19.99,
-            "stock": 60
+            "precio": 1999.0,
+            "stock": 60,
+            "imagen": "assets/gorra-deportiva.webp"
           }
         ]
       },
@@ -309,27 +346,31 @@
           {
             "nombre": "Mochila de Senderismo - 30L",
             "descripcion": "Mochila de senderismo de 30 litros con múltiples compartimentos y correas acolchadas para mayor comodidad. Ideal para excursiones y caminatas.",
-            "precio": 69.99,
+            "precio": 69999.0,
             "stock": 25,
-            "descuento": 50
+            "descuento": 50,
+            "imagen": "assets/mochila-senderismo.webp"
           },
           {
             "nombre": "Mochila Escolar - Diseño Juvenil",
             "descripcion": "Mochila escolar con diseño juvenil y colorido, ideal para estudiantes. Incluye varios compartimentos y correas ajustables. Dimensiones: 40x30x15 cm.",
-            "precio": 34.99,
-            "stock": 40
+            "precio": 56700.0,
+            "stock": 40,
+            "imagen": "assets/mochila-escolar.webp"
           },
           {
-            "nombre": "Mochila de Laptop - 15.6 pulgadas",
+            "nombre": "Mochila de Notebook 15.6 pulgadas",
             "descripcion": "Mochila para laptop con compartimento acolchado para computadoras de hasta 15.6 pulgadas. Diseñada para el trabajo o estudios, con múltiples bolsillos para accesorios.",
-            "precio": 59.99,
-            "stock": 30
+            "precio": 66500.0,
+            "stock": 30,
+            "imagen": "assets/mochila-notebook.webp"
           },
           {
             "nombre": "Mochila Casual - Cuero Sintético",
             "descripcion": "Mochila casual de cuero sintético con un diseño elegante y moderno. Ideal para uso diario y ocasiones informales. Dimensiones: 35x25x10 cm.",
-            "precio": 49.99,
-            "stock": 20
+            "precio": 24000.0,
+            "stock": 20,
+            "imagen": "assets/mochila-cuero-sintetico.webp"
           }
         ]
       },
@@ -339,15 +380,17 @@
           {
             "nombre": "Cartera de Cuero - Clásica",
             "descripcion": "Cartera de cuero genuino con compartimentos para tarjetas y billetes. Diseño clásico y elegante, disponible en varios colores. Dimensiones: 20x10 cm.",
-            "precio": 79.99,
+            "precio": 27000.0,
             "stock": 15,
-            "descuento": 25
+            "descuento": 25,
+            "imagen": "assets/cartera-cuero.webp"
           },
           {
             "nombre": "Cartera de Tela - Compacta",
             "descripcion": "Cartera compacta de tela con diseño moderno y práctico. Incluye compartimentos para tarjetas y monedas. Ideal para uso diario. Dimensiones: 15x9 cm.",
-            "precio": 24.99,
-            "stock": 40
+            "precio": 23000.0,
+            "stock": 40,
+            "imagen": "assets/cartera-compacta.webp"
           }
         ]
       }

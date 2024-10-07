@@ -4,4 +4,41 @@ main + footer {
     text-align: center;
     color: white;
     padding-block: 20px;
+    h3 {
+        margin-bottom: 10px;
+        font-size: 1.3rem;
+        font-weight: 500;
+    }
+
+    div {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        a svg {
+            transition: color 200ms ease-out;
+            color: white;
+            width: 2rem;
+            height: 2rem;
+        }
+        & > a:hover:first-child {
+            svg {
+                color: #f46f30
+            }
+        }
+        & > a:hover:nth-child(2) {
+            svg {
+                color: #1877f2;
+            }
+        }
+        & > a:hover:nth-child(3) {
+            svg {
+                color: #000;
+            }
+        }
+        & > a:hover:last-child {
+            svg {
+                color: #69c9d0;
+            }
+        }
+    }
 }

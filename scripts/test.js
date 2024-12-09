@@ -525,7 +525,7 @@ async function cargarItems(rutaActual) {
   // debugger
   try {
     let route = "./data/productos.json"
-    if (rutaActual === "/pages/product.html" || rutaActual === "/JavaScript-Course/pages/product.html")
+    if (rutaActual === "/pages/product.html" || rutaActual === "/Regaleria/pages/product.html")
       route = "../data/productos.json"
     const respuesta = await fetch(route);
     if (!respuesta.ok) throw new Error(`Error al cargar el JSON: ${respuesta.statusText}`);
@@ -810,7 +810,7 @@ function actualizarCarritoDOM() {
 //main
 const rutaActual = window.location.pathname;
 // Verificar la ruta actual
-const validURL = rutaActual === '/' || rutaActual === '/index.html' || rutaActual === "/#" || rutaActual === "/JavaScript-Course/" || rutaActual === "/JavaScript-Course/index.html"
+const validURL = rutaActual === '/' || rutaActual === '/index.html' || rutaActual === "/#" || rutaActual === "/Regaleria/" || rutaActual === "/Regaleria/index.html"
 let items = await cargarItems(rutaActual);
 let tienda = cargarTienda(items);
 actualizarIndicadorCarrito()
@@ -818,7 +818,7 @@ tienda.carrito.cargarFullCarrito()
 const categoriasConProductos = tienda.obtenerCategoriasConProductos()
 if (validURL) {
   crearTodasLasCategoriasConProductosEnDOM(categoriasConProductos);
-} else if (rutaActual === '/pages/product.html' || rutaActual === '/JavaScript-Course/pages/product.html') {
+} else if (rutaActual === '/pages/product.html' || rutaActual === '/Regaleria/pages/product.html') {
   cargarProductoFull(categoriasConProductos)
 }
 
